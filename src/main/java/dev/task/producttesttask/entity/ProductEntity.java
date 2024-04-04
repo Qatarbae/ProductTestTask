@@ -1,5 +1,6 @@
 package dev.task.producttesttask.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,20 +29,9 @@ public class ProductEntity {
     @Column(name = "installmentAvailable", nullable = false)
     private boolean installmentAvailable;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<TelevisionModelEntity> televisions;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<VacuumCleanerModelEntity> vacuumCleaners;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<RefrigeratorModelEntity> refrigerators;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<PhoneModelEntity> smartphones;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ComputerModelEntity> computers;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ModelEntity> models;
 
     public ProductEntity(String name, String manufacturerCountry, String manufacturer, boolean onlineOrderAvailable, boolean installmentAvailable) {
         this.name = name;

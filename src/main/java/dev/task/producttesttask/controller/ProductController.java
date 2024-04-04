@@ -1,6 +1,7 @@
 package dev.task.producttesttask.controller;
 
 import dev.task.producttesttask.controller.payload.NewProductPayload;
+import dev.task.producttesttask.entity.DTO.ProductDto;
 import dev.task.producttesttask.entity.ProductEntity;
 import dev.task.producttesttask.service.ProductService;
 import org.springframework.context.MessageSource;
@@ -14,7 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("api/product/")
+@RequestMapping("api/products/")
 public class ProductController {
 
     private final MessageSource messageSource;
@@ -26,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Iterable<ProductEntity>> getProducts(
+    public ResponseEntity<Iterable<ProductDto>> getProducts(
             @RequestParam(name = "filter", required = false) String filter
     ) {
         return ResponseEntity.ok().body(productService.getAllProducts(filter));
