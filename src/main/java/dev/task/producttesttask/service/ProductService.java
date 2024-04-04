@@ -5,16 +5,14 @@ import dev.task.producttesttask.entity.DTO.ProductDto;
 import dev.task.producttesttask.entity.ProductEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public interface ProductService {
 
     Iterable<ProductDto> getAllProducts(String filter);
 
-    Optional<ProductEntity> getProductById(Long productId);
+    ProductDto getProductById(Long productId);
 
     ProductEntity createProduct(NewProductPayload product);
 
-    void deleteProduct(Integer productId);
+    void deleteProduct(Long productId);
 }

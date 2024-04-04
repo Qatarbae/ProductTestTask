@@ -7,7 +7,6 @@ import dev.task.producttesttask.entity.ModelEntity;
 import dev.task.producttesttask.entity.ProductEntity;
 import dev.task.producttesttask.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public Iterable<ProductDto> getAllProducts(String filter) {
         Iterable<ProductEntity> allProducts;
         if (filter != null && !filter.isBlank()) {
@@ -37,8 +35,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<ProductEntity> getProductById(Long productId) {
-        return this.productRepository.findById(productId);
+    public ProductDto getProductById(Long productId) {
+        Optional<ProductEntity> productOptional = this.productRepository.findById(productId);
+        if (productOptional.isPresent()) {
+            ProductEntity productEntity = productOptional.get();
+            return mapProductEntityToDTO(productEntity);
+        } else {
+            throw new RuntimeException("Product not found");
+        }
     }
 
     @Override
@@ -53,8 +57,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Integer productId) {
-
+    public void deleteProduct(Long productId) {
+        this.productRepository.deleteById(productId);
     }
 
     public Iterable<ProductDto> mapProductEntitiesToDTOs(Iterable<ProductEntity> productEntities) {

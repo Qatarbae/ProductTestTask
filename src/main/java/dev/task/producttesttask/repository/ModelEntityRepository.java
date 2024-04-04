@@ -12,11 +12,11 @@ import java.util.List;
 public interface ModelEntityRepository extends CrudRepository<ModelEntity, Long> {
 
     @Query("SELECT m FROM ModelEntity m " +
-            "WHERE (:product is null or m.product.id = :product) " +
-            "AND (:name is null or lower(m.name) like lower(concat('%', :name, '%'))) " +
-            "AND (:color is null or lower(m.color) like lower(concat('%', :color, '%'))) " +
-            "AND (:minPrice is null or m.price >= :minPrice) " +
-            "AND (:maxPrice is null or m.price <= :maxPrice)")
+            "WHERE (:product IS NULL OR m.product.id = :product) " +
+            "AND (:name IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+            "AND (:color IS NULL OR LOWER(m.color) LIKE LOWER(CONCAT('%', :color, '%'))) " +
+            "AND (:minPrice IS NULL OR m.price >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR m.price <= :maxPrice)")
     List<ModelEntity> findFilteredModels(
             @Param("product") Long product,
             @Param("name") String name,
@@ -24,4 +24,13 @@ public interface ModelEntityRepository extends CrudRepository<ModelEntity, Long>
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice
     );
+
+    @Query("SELECT m FROM ModelEntity m ORDER BY m.name ASC, m.price ASC")
+    List<ModelEntity> findAllSortedByNameAndPrice();
+
+    @Query("SELECT m FROM ModelEntity m ORDER BY m.name ASC")
+    List<ModelEntity> findAllSortedByName();
+
+    @Query("SELECT m FROM ModelEntity m ORDER BY m.price ASC")
+    List<ModelEntity> findAllSortedByPrice();
 }

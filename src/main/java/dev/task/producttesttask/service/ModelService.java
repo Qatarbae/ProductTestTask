@@ -17,4 +17,6 @@ public interface ModelService {
     ModelEntity createModel(Long productId, NewModelPayload modelPayload);
 
     void deleteModel(Long modelId);
+
+    Iterable<ModelEntity> findAllSorted(String sortBy);
 }

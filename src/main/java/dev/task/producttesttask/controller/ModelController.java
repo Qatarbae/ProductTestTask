@@ -8,13 +8,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("api/models")
+@RequestMapping("api/products/models/")
 public class ModelController {
 
     private final MessageSource messageSource;
@@ -25,25 +26,28 @@ public class ModelController {
         this.modelService = modelService;
     }
 
-    @GetMapping("/product/{productId:\\d+}")
-    public ResponseEntity<Iterable<ModelEntity>> getModels(@PathVariable("productId") Long productId,
-                                                           @RequestBody NewFilterSearch filterSearch) {
+    @GetMapping("/")
+    @Transactional
+    public ResponseEntity<Iterable<ModelEntity>> getModels(
+            @RequestParam(name = "productId", required = false) Long productId,
+            @RequestBody NewFilterSearch filterSearch
+    ) {
         return ResponseEntity.ok()
-                .body(
-                        this.modelService.getAllModel(productId, filterSearch)
-                );
+                .body(this.modelService.getAllModel(productId, filterSearch));
     }
 
     @GetMapping("/{modelId:\\d+}")
+    @Transactional
     public ResponseEntity<?> getModelById(@PathVariable("modelId") Long modelId) {
         return ResponseEntity.ok()
                 .body(
-                        this.modelService.getModelById(modelId).orElseThrow(RuntimeException::new)
+                        this.modelService.getModelById(modelId)
                 );
     }
 
 
     @PostMapping("/{productId:\\d+}")
+    @Transactional
     public ResponseEntity<?> createModel(@PathVariable("productId") Long productId,
                                          @RequestBody NewModelPayload payload) {
         ModelEntity modelEntity = this.modelService.createModel(productId, payload);
@@ -55,6 +59,16 @@ public class ModelController {
             @PathVariable("modelId") Long modelId) {
         this.modelService.deleteModel(modelId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/sort/")
+    public ResponseEntity<Iterable<ModelEntity>> getSortedModels(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "price", required = false) String price) {
+        if (!name.isEmpty() && !price.isEmpty()) {
+            return ResponseEntity.ok().body(this.modelService.findAllSorted(name + "-" + price));
+        }
+        return ResponseEntity.ok().body(this.modelService.findAllSorted(name + "" + price));
     }
 
     @ExceptionHandler(RuntimeException.class)

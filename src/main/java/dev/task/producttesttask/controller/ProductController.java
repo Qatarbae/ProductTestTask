@@ -8,10 +8,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @RestController
@@ -27,6 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("")
+    @Transactional
     public ResponseEntity<Iterable<ProductDto>> getProducts(
             @RequestParam(name = "filter", required = false) String filter
     ) {
@@ -34,19 +35,21 @@ public class ProductController {
     }
 
     @GetMapping("{productId:\\d+}/product")
-    public ResponseEntity<?> getProduct(@PathVariable("productId") Long produсtId) {
-        return ResponseEntity.ok().body(this.productService.getProductById(produсtId)
-                .orElseThrow(() -> new NoSuchElementException("Not Found Product")));
+    @Transactional
+    public ResponseEntity<ProductDto> getProduct(@PathVariable("productId") Long produсtId) {
+        return ResponseEntity.ok().body(this.productService.getProductById(produсtId));
     }
 
     @PostMapping("")
+    @Transactional
     public ResponseEntity<?> createProduct(@RequestBody NewProductPayload payload) {
         ProductEntity product = this.productService.createProduct(payload);
         return ResponseEntity.ok().body(product);
     }
 
     @DeleteMapping("{productId:\\d+}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Integer productId) {
+    @Transactional
+    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") Long productId) {
         this.productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
