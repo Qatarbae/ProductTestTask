@@ -5,12 +5,14 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "t_phone", schema = "schema_product")
+@Table(name = "t_phone")
 public class PhoneModelEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
     @Column(name = "serial_number", nullable = false, length = 50)
     private String serialNumber;
     @Column(name = "color", nullable = false, length = 30)

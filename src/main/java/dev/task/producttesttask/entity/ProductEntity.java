@@ -1,13 +1,17 @@
 package dev.task.producttesttask.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "t_product", schema = "schema_product")
+@Table(name = "t_product")
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +42,12 @@ public class ProductEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ComputerModelEntity> computers;
+
+    public ProductEntity(String name, String manufacturerCountry, String manufacturer, boolean onlineOrderAvailable, boolean installmentAvailable) {
+        this.name = name;
+        this.manufacturerCountry = manufacturerCountry;
+        this.manufacturer = manufacturer;
+        this.onlineOrderAvailable = onlineOrderAvailable;
+        this.installmentAvailable = installmentAvailable;
+    }
 }
