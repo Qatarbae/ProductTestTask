@@ -1,24 +1,24 @@
 package dev.task.producttesttask.service;
 
 import dev.task.producttesttask.controller.payload.NewProductPayload;
-import dev.task.producttesttask.entity.DTO.ModelDto;
 import dev.task.producttesttask.entity.DTO.ProductDto;
-import dev.task.producttesttask.entity.ModelEntity;
 import dev.task.producttesttask.entity.ProductEntity;
+import dev.task.producttesttask.mapper.ProductMapper;
 import dev.task.producttesttask.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
@@ -29,20 +29,31 @@ public class ProductServiceImpl implements ProductService {
         } else {
             allProducts = this.productRepository.findAll();
         }
-        allProducts.forEach(product -> product.getModels().size());
-        Iterable<ProductDto> productDTOList = mapProductEntitiesToDTOs(allProducts);
-        return productDTOList;
+        allProducts.forEach(product -> {
+            product.getTvModels().size();
+            product.getVacuumCleanerModels().size();
+            product.getRefrigeratorModels().size();
+            product.getPhoneModels().size();
+            product.getComputerModels().size();
+        });
+
+        return StreamSupport.stream(allProducts.spliterator(), false)
+                .map(productMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ProductDto getProductById(Long productId) {
-        Optional<ProductEntity> productOptional = this.productRepository.findById(productId);
-        if (productOptional.isPresent()) {
-            ProductEntity productEntity = productOptional.get();
-            return mapProductEntityToDTO(productEntity);
-        } else {
-            throw new RuntimeException("Product not found");
-        }
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        productEntity.getTvModels().size();
+        productEntity.getVacuumCleanerModels().size();
+        productEntity.getRefrigeratorModels().size();
+        productEntity.getPhoneModels().size();
+        productEntity.getComputerModels().size();
+
+        return productMapper.toDto(productEntity);
     }
 
     @Override
@@ -61,42 +72,4 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository.deleteById(productId);
     }
 
-    public Iterable<ProductDto> mapProductEntitiesToDTOs(Iterable<ProductEntity> productEntities) {
-        List<ProductDto> productDTOList = new ArrayList<>();
-        productEntities.forEach(productEntity -> {
-            ProductDto productDTO = mapProductEntityToDTO(productEntity);
-            productDTOList.add(productDTO);
-        });
-        return productDTOList;
-    }
-
-    private ProductDto mapProductEntityToDTO(ProductEntity productEntity) {
-        ProductDto productDto = new ProductDto();
-        productDto.setId(productEntity.getId());
-        productDto.setName(productEntity.getName());
-        productDto.setManufacturerCountry(productDto.getManufacturerCountry());
-        productDto.setManufacturer(productDto.getManufacturer());
-        productDto.setInstallmentAvailable(productEntity.isInstallmentAvailable());
-        productDto.setOnlineOrderAvailable(productDto.isOnlineOrderAvailable());
-        List<ModelDto> modelDTOList = mapModelEntitiesToDTOs(productEntity.getModels());
-        productDto.setModels(modelDTOList);
-
-        return productDto;
-    }
-
-    private List<ModelDto> mapModelEntitiesToDTOs(List<ModelEntity> modelEntities) {
-        List<ModelDto> modelDtoList = new ArrayList<>();
-        modelEntities.forEach(modelEntity -> {
-            ModelDto modelDto = new ModelDto();
-            modelDto.setId(modelEntity.getId());
-            modelDto.setName(modelEntity.getName());
-            modelDto.setSerialNumber(modelEntity.getSerialNumber());
-            modelDto.setColor(modelDto.getColor());
-            modelDto.setSize(modelDto.getSize());
-            modelDto.setPrice(modelDto.getPrice());
-            modelDto.setAvailable(modelDto.isAvailable());
-            modelDtoList.add(modelDto);
-        });
-        return modelDtoList;
-    }
 }

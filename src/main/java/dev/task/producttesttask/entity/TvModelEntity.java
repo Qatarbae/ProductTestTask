@@ -8,12 +8,12 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "t_computer")
+@Table(name = "t_tv")
 @DiscriminatorValue("Tv")
-public class ComputerModelEntity extends ModelEntity {
+public class TvModelEntity extends ModelEntity {
     @Column(name = "category", nullable = false, length = 100)
     private String category;
-    @Column(name = "processorType", nullable = false, length = 100)
-    private String processorType;
+    @Column(name = "technology", nullable = false, length = 100)
+    private String technology;
 
 }

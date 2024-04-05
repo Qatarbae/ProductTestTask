@@ -1,11 +1,13 @@
 package dev.task.producttesttask.controller.payload;
 
-public record NewModelPayload(
-        String name,
-        String serialNumber,
-        String color,
-        String size,
-        double price,
-        boolean available
-) {
+import lombok.Data;
+
+@Data
+public class NewModelPayload {
+    private String name;
+    private String serialNumber;
+    private String color;
+    private String size;
+    private double price;
+    private boolean available;
 }

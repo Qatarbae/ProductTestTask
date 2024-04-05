@@ -29,9 +29,22 @@ public class ProductEntity {
     @Column(name = "installmentAvailable", nullable = false)
     private boolean installmentAvailable;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     @JsonIgnore
-    private List<ModelEntity> models;
+    private List<TvModelEntity> tvModels;
+
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<VacuumCleanerModelEntity> vacuumCleanerModels;
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<RefrigeratorModelEntity> refrigeratorModels;
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<PhoneModelEntity> phoneModels;
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<ComputerModelEntity> computerModels;
 
     public ProductEntity(String name, String manufacturerCountry, String manufacturer, boolean onlineOrderAvailable, boolean installmentAvailable) {
         this.name = name;

@@ -1,34 +1,18 @@
 package dev.task.producttesttask.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "t_phone")
-public class PhoneModelEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private Long id;
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
-    @Column(name = "serial_number", nullable = false, length = 50)
-    private String serialNumber;
-    @Column(name = "color", nullable = false, length = 30)
-    private String color;
-    @Column(name = "size", nullable = false, length = 20)
-    private String size;
-    @Column(name = "price", nullable = false)
-    private double price;
+@DiscriminatorValue("Phone")
+public class PhoneModelEntity extends ModelEntity {
     @Column(name = "memory", nullable = false)
-    private Integer memory;
-    @Column(name = "countCamera", nullable = false)
-    private int countCamera;
-    @Column(name = "available", nullable = false)
-    private boolean available;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private ProductEntity product;
+    private int memory;
+    @Column(name = "cameraCount", nullable = false)
+    private int cameraCount;
 }
