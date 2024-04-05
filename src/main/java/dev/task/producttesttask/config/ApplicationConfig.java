@@ -34,7 +34,27 @@ public class ApplicationConfig {
 
     private void createAndSaveData() {
         for (int i = 0; i < 5; i++) {
-            ProductEntity product = createProduct(
+            ProductEntity product;
+            ProductType productType = null;
+            switch (i) {
+                case 0:
+                    productType = ProductType.TV;
+                    break;
+                case 1:
+                    productType = ProductType.VACUUM_CLEANER;
+                    break;
+                case 2:
+                    productType = ProductType.REFRIGERATOR;
+                    break;
+                case 3:
+                    productType = ProductType.PHONE;
+                    break;
+                case 4:
+                    productType = ProductType.COMPUTER;
+                    break;
+            }
+            product = createProduct(
+                    productType,
                     "Product " + (int) (Math.floor(Math.random() * 100)),
                     "Country " + (int) (Math.floor(Math.random() * 100)),
                     "Manufacturer " + (int) (Math.floor(Math.random() * 100)),
@@ -103,8 +123,8 @@ public class ApplicationConfig {
         }
     }
 
-    private ProductEntity createProduct(String name, String country, String manufacturer, boolean onlineOrderAvailable, boolean installmentAvailable) {
-        return new ProductEntity(name, country, manufacturer, onlineOrderAvailable, installmentAvailable);
+    private ProductEntity createProduct(ProductType type, String name, String country, String manufacturer, boolean onlineOrderAvailable, boolean installmentAvailable) {
+        return new ProductEntity(type, name, country, manufacturer, onlineOrderAvailable, installmentAvailable);
     }
 
 

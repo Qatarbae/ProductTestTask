@@ -1,28 +1,21 @@
 package dev.task.producttesttask.controller;
 
+import dev.task.producttesttask.controller.payload.FilterProductSearch;
 import dev.task.producttesttask.controller.payload.NewProductPayload;
 import dev.task.producttesttask.entity.DTO.ProductDto;
 import dev.task.producttesttask.entity.ProductEntity;
 import dev.task.producttesttask.service.ProductService;
-import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Locale;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api/products/")
 public class ProductController {
 
-    private final MessageSource messageSource;
     private final ProductService productService;
 
-    public ProductController(MessageSource messageSource, ProductService productService) {
-        this.messageSource = messageSource;
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -32,6 +25,14 @@ public class ProductController {
             @RequestParam(name = "filter", required = false) String filter
     ) {
         return ResponseEntity.ok().body(productService.getAllProducts(filter));
+    }
+
+    @PostMapping("/filter")
+    @Transactional
+    public ResponseEntity<Iterable<ProductDto>> getProductsSearch(
+            @RequestBody FilterProductSearch filter
+    ) {
+        return ResponseEntity.ok().body(productService.getAllProductsFilter(filter));
     }
 
     @GetMapping("{productId:\\d+}/product")
@@ -54,14 +55,5 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ProblemDetail> exception(RuntimeException exception,
-                                                   Locale locale) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
-                        Objects.requireNonNull(this.messageSource.getMessage(
-                                exception.getMessage(),
-                                new Object[0],
-                                exception.getMessage(), locale))));
-    }
+
 }

@@ -29,10 +29,13 @@ public class ProductEntity {
     @Column(name = "installmentAvailable", nullable = false)
     private boolean installmentAvailable;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private ProductType type;
+
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<TvModelEntity> tvModels;
-
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<VacuumCleanerModelEntity> vacuumCleanerModels;
@@ -46,7 +49,8 @@ public class ProductEntity {
     @JsonIgnore
     private List<ComputerModelEntity> computerModels;
 
-    public ProductEntity(String name, String manufacturerCountry, String manufacturer, boolean onlineOrderAvailable, boolean installmentAvailable) {
+    public ProductEntity(ProductType type, String name, String manufacturerCountry, String manufacturer, boolean onlineOrderAvailable, boolean installmentAvailable) {
+        this.type = type;
         this.name = name;
         this.manufacturerCountry = manufacturerCountry;
         this.manufacturer = manufacturer;

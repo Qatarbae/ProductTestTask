@@ -19,6 +19,7 @@ public class ProductMapper {
         productDto.setManufacturer(productEntity.getManufacturer());
         productDto.setInstallmentAvailable(productEntity.isInstallmentAvailable());
         productDto.setOnlineOrderAvailable(productEntity.isOnlineOrderAvailable());
+        productDto.setType(productEntity.getType());
 
         List<ModelEntity> allModels = new ArrayList<>();
         allModels.addAll(productEntity.getTvModels());

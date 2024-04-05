@@ -1,5 +1,6 @@
 package dev.task.producttesttask.service;
 
+import dev.task.producttesttask.controller.payload.FilterProductSearch;
 import dev.task.producttesttask.controller.payload.NewProductPayload;
 import dev.task.producttesttask.entity.DTO.ProductDto;
 import dev.task.producttesttask.entity.ProductEntity;
@@ -43,6 +44,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Iterable<ProductDto> getAllProductsFilter(FilterProductSearch filter) {
+        Iterable<ProductEntity> allProducts = this.productRepository.findAllWithFilters(
+                filter.getType(),
+                filter.getName(),
+                filter.getManufacturerCountry(),
+                filter.getManufacturer(),
+                filter.getOnlineOrderAvailable(),
+                filter.getInstallmentAvailable()
+        );
+        allProducts.forEach(product -> {
+            product.getTvModels().size();
+            product.getVacuumCleanerModels().size();
+            product.getRefrigeratorModels().size();
+            product.getPhoneModels().size();
+            product.getComputerModels().size();
+        });
+        return StreamSupport.stream(allProducts.spliterator(), false)
+                .map(productMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ProductDto getProductById(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -59,6 +82,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductEntity createProduct(NewProductPayload payload) {
         return this.productRepository.save(new ProductEntity(
+                payload.type(),
                 payload.name(),
                 payload.manufacturerCountry(),
                 payload.manufacturer(),
