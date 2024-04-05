@@ -11,4 +11,5 @@ public class ModelDto {
     private String size;
     private double price;
     private boolean available;
+    private ProductDto productDto;
 }

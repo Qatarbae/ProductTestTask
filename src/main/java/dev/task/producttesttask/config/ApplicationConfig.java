@@ -33,7 +33,7 @@ public class ApplicationConfig {
     }
 
     private void createAndSaveData() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             ProductEntity product;
             ProductType productType = null;
             switch (i) {
@@ -52,6 +52,9 @@ public class ApplicationConfig {
                 case 4:
                     productType = ProductType.COMPUTER;
                     break;
+                case 5:
+                    productType = ProductType.TV;
+                    break;
             }
             product = createProduct(
                     productType,
@@ -65,6 +68,7 @@ public class ApplicationConfig {
                 ModelEntity model;
                 if (i == 0) {
                     model = createTvModel(
+                            productType,
                             "TV Model " + (int) (Math.floor(Math.random() * 100)) + "-" + (j + 1),
                             "TV SerialNumber " + (int) (Math.floor(Math.random() * 10000)),
                             "TV Color " + (int) (Math.floor(Math.random() * 100)),
@@ -76,6 +80,7 @@ public class ApplicationConfig {
                     tvModelRepository.save((TvModelEntity) model);
                 } else if (i == 1) {
                     model = createVacuumCleanerModel(
+                            productType,
                             "Vacuum Cleaner Model " + (int) (Math.floor(Math.random() * 100)) + "-" + (j + 1),
                             "Vacuum Cleaner SerialNumber " + (int) (Math.floor(Math.random() * 10000)),
                             "Vacuum Cleaner Color " + (int) (Math.floor(Math.random() * 100)),
@@ -87,6 +92,7 @@ public class ApplicationConfig {
                     vacuumCleanerModelRepository.save((VacuumCleanerModelEntity) model);
                 } else if (i == 2) {
                     model = createRefrigeratorModel(
+                            productType,
                             "Refrigerator Model " + (int) (Math.floor(Math.random() * 100)) + "-" + (j + 1),
                             "Refrigerator SerialNumber " + (int) (Math.floor(Math.random() * 10000)),
                             "Refrigerator Color " + (int) (Math.floor(Math.random() * 100)),
@@ -98,6 +104,7 @@ public class ApplicationConfig {
                     refrigeratorRepository.save((RefrigeratorModelEntity) model);
                 } else if (i == 3) {
                     model = createPhoneModel(
+                            productType,
                             "Phone Model " + (int) (Math.floor(Math.random() * 100)) + "-" + (j + 1),
                             "Phone SerialNumber " + (int) (Math.floor(Math.random() * 10000)),
                             "Phone Color " + (int) (Math.floor(Math.random() * 100)),
@@ -107,8 +114,9 @@ public class ApplicationConfig {
                             (int) (Math.floor(Math.random() * 10)),
                             (int) (Math.floor(Math.random() * 10)));
                     phoneRepository.save((PhoneModelEntity) model);
-                } else {
+                } else if (i == 4) {
                     model = createComputerModel(
+                            productType,
                             "Computer Model " + (int) (Math.floor(Math.random() * 100)) + "-" + (j + 1),
                             "Computer SerialNumber " + (int) (Math.floor(Math.random() * 10000)),
                             "Computer Color " + (int) (Math.floor(Math.random() * 100)),
@@ -118,6 +126,18 @@ public class ApplicationConfig {
                             "Computer Category " + (int) (Math.floor(Math.random() * 10)),
                             "Computer Processor Type " + (int) (Math.floor(Math.random() * 10)));
                     computerRepository.save((ComputerModelEntity) model);
+                } else {
+                    model = createTvModel(
+                            productType,
+                            "TV Model " + (int) (Math.floor(Math.random() * 100)) + "-" + (j + 1),
+                            "TV SerialNumber " + (int) (Math.floor(Math.random() * 10000)),
+                            "TV Color " + (int) (Math.floor(Math.random() * 100)),
+                            "TV Size " + (int) (Math.floor(Math.random() * 100)),
+                            100.0 * (int) (Math.floor(Math.random() * 100)),
+                            true, product,
+                            "TV Category " + (int) (Math.floor(Math.random() * 100)),
+                            "TV Technology " + (int) (Math.floor(Math.random() * 100)));
+                    tvModelRepository.save((TvModelEntity) model);
                 }
             }
         }
@@ -129,6 +149,7 @@ public class ApplicationConfig {
 
 
     private TvModelEntity createTvModel(
+            ProductType productType,
             String name,
             String serialNumber,
             String color,
@@ -139,6 +160,7 @@ public class ApplicationConfig {
             String category,
             String technology) {
         TvModelEntity tvModel = new TvModelEntity();
+        tvModel.setModelType(productType);
         tvModel.setName(name);
         tvModel.setSerialNumber(serialNumber);
         tvModel.setColor(color);
@@ -152,6 +174,7 @@ public class ApplicationConfig {
     }
 
     private VacuumCleanerModelEntity createVacuumCleanerModel(
+            ProductType productType,
             String name,
             String serialNumber,
             String color,
@@ -162,6 +185,7 @@ public class ApplicationConfig {
             double dustBagCapacity,
             int modesCount) {
         VacuumCleanerModelEntity vacuumCleanerModel = new VacuumCleanerModelEntity();
+        vacuumCleanerModel.setModelType(productType);
         vacuumCleanerModel.setName(name);
         vacuumCleanerModel.setSerialNumber(serialNumber);
         vacuumCleanerModel.setColor(color);
@@ -175,6 +199,7 @@ public class ApplicationConfig {
     }
 
     private RefrigeratorModelEntity createRefrigeratorModel(
+            ProductType productType,
             String name,
             String serialNumber,
             String color,
@@ -185,6 +210,7 @@ public class ApplicationConfig {
             int doorsCount,
             String compressorType) {
         RefrigeratorModelEntity refrigeratorModel = new RefrigeratorModelEntity();
+        refrigeratorModel.setModelType(productType);
         refrigeratorModel.setName(name);
         refrigeratorModel.setSerialNumber(serialNumber);
         refrigeratorModel.setColor(color);
@@ -198,6 +224,7 @@ public class ApplicationConfig {
     }
 
     private PhoneModelEntity createPhoneModel(
+            ProductType productType,
             String name,
             String serialNumber,
             String color,
@@ -208,6 +235,7 @@ public class ApplicationConfig {
             int memory,
             int cameraCount) {
         PhoneModelEntity phoneModel = new PhoneModelEntity();
+        phoneModel.setModelType(productType);
         phoneModel.setName(name);
         phoneModel.setSerialNumber(serialNumber);
         phoneModel.setColor(color);
@@ -221,6 +249,7 @@ public class ApplicationConfig {
     }
 
     private ComputerModelEntity createComputerModel(
+            ProductType productType,
             String name,
             String serialNumber,
             String color,
@@ -231,6 +260,7 @@ public class ApplicationConfig {
             String category,
             String processorType) {
         ComputerModelEntity computerModel = new ComputerModelEntity();
+        computerModel.setModelType(productType);
         computerModel.setName(name);
         computerModel.setSerialNumber(serialNumber);
         computerModel.setColor(color);

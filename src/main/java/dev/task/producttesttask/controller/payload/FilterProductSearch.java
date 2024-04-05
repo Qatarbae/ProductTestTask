@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class FilterProductSearch {
     private ProductType type = null;
-    private String name = null;
+    private String productName = null;
     private String manufacturerCountry = null;
     private String manufacturer = null;
     private Boolean onlineOrderAvailable = null;

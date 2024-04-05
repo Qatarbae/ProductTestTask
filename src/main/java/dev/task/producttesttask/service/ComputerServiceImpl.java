@@ -1,7 +1,7 @@
 package dev.task.producttesttask.service;
 
+import dev.task.producttesttask.controller.payload.FilterComputerModelSearch;
 import dev.task.producttesttask.controller.payload.NewComputerPayload;
-import dev.task.producttesttask.controller.payload.NewFilterSearch;
 import dev.task.producttesttask.entity.ComputerModelEntity;
 import dev.task.producttesttask.entity.DTO.ModelDto;
 import dev.task.producttesttask.entity.ModelEntity;
@@ -24,7 +24,12 @@ public class ComputerServiceImpl implements ComputerService {
     }
 
     @Override
-    public Iterable<ModelDto> getAllModel(Long productId, NewFilterSearch filterSearch) {
+    public Iterable<ModelDto> getAllModelsByTypeAndColorAndPriceRange(FilterComputerModelSearch filterSearch) {
+        return null;
+    }
+
+    @Override
+    public Iterable<ModelDto> findAllModels(FilterComputerModelSearch filterSearch) {
         return null;
     }
 

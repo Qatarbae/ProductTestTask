@@ -1,6 +1,6 @@
 package dev.task.producttesttask.service;
 
-import dev.task.producttesttask.controller.payload.NewFilterSearch;
+import dev.task.producttesttask.controller.payload.FilterVacuumCleanerModelSearch;
 import dev.task.producttesttask.controller.payload.NewVacuumCleanerModelPayload;
 import dev.task.producttesttask.entity.DTO.ModelDto;
 import dev.task.producttesttask.entity.ModelEntity;
@@ -24,7 +24,12 @@ public class VacuumCleanerServiceImpl implements VacuumCleanerService {
     }
 
     @Override
-    public Iterable<ModelDto> getAllModel(Long productId, NewFilterSearch filterSearch) {
+    public Iterable<ModelDto> getAllModelsByTypeAndColorAndPriceRange(FilterVacuumCleanerModelSearch filterSearch) {
+        return null;
+    }
+
+    @Override
+    public Iterable<ModelDto> findAllModels(FilterVacuumCleanerModelSearch filterSearch) {
         return null;
     }
 

@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     public Iterable<ProductDto> getAllProductsFilter(FilterProductSearch filter) {
         Iterable<ProductEntity> allProducts = this.productRepository.findAllWithFilters(
                 filter.getType(),
-                filter.getName(),
+                filter.getProductName(),
                 filter.getManufacturerCountry(),
                 filter.getManufacturer(),
                 filter.getOnlineOrderAvailable(),

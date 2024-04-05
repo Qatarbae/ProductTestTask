@@ -1,4 +1,4 @@
 package dev.task.producttesttask.controller;
 
-public class VacuumCleaner {
+public class VacuumCleanerController {
 }

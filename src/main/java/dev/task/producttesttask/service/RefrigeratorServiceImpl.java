@@ -1,6 +1,6 @@
 package dev.task.producttesttask.service;
 
-import dev.task.producttesttask.controller.payload.NewFilterSearch;
+import dev.task.producttesttask.controller.payload.FilterRefrigeratorSearch;
 import dev.task.producttesttask.controller.payload.NewRefrigeratorPayload;
 import dev.task.producttesttask.entity.DTO.ModelDto;
 import dev.task.producttesttask.entity.ModelEntity;
@@ -24,7 +24,12 @@ public class RefrigeratorServiceImpl implements RefrigeratorService {
     }
 
     @Override
-    public Iterable<ModelDto> getAllModel(Long productId, NewFilterSearch filterSearch) {
+    public Iterable<ModelDto> getAllModelsByTypeAndColorAndPriceRange(FilterRefrigeratorSearch filterSearch) {
+        return null;
+    }
+
+    @Override
+    public Iterable<ModelDto> findAllModels(FilterRefrigeratorSearch filterSearch) {
         return null;
     }
 

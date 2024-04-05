@@ -31,6 +31,9 @@ public abstract class ModelEntity {
 
     @Column(name = "available", nullable = false)
     private boolean available;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private ProductType modelType;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
