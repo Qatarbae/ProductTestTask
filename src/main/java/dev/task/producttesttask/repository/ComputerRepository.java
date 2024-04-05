@@ -39,8 +39,8 @@ public interface ComputerRepository extends CrudRepository<ComputerModelEntity, 
             @Nullable @Param("color") String color,
             @Nullable @Param("minPrice") Double minPrice,
             @Nullable @Param("maxPrice") Double maxPrice,
-            @Nullable @Param("category") Double category,
-            @Nullable @Param("processorType") Double processorType
+            @Nullable @Param("category") String category,
+            @Nullable @Param("processorType") String processorType
     );
 
     Iterable<ComputerModelEntity> findAllByOrderByNameAsc();

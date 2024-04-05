@@ -6,63 +6,75 @@ import dev.task.producttesttask.entity.ComputerModelEntity;
 import dev.task.producttesttask.entity.DTO.ModelDto;
 import dev.task.producttesttask.entity.ModelEntity;
 import dev.task.producttesttask.entity.ProductEntity;
+import dev.task.producttesttask.entity.ProductType;
 import dev.task.producttesttask.mapper.ProductMapper;
 import dev.task.producttesttask.repository.ComputerRepository;
 import dev.task.producttesttask.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ComputerServiceImpl implements ComputerService {
     private final ComputerRepository computerRepository;
     private final ProductRepository productRepository;
 
-    public ComputerServiceImpl(ComputerRepository computerRepository, ProductRepository productRepository) {
+    private final ProductMapper productMapper;
+
+    public ComputerServiceImpl(ComputerRepository computerRepository, ProductRepository productRepository, ProductMapper productMapper) {
         this.computerRepository = computerRepository;
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
     public Iterable<ModelDto> getAllModelsByTypeAndColorAndPriceRange(FilterComputerModelSearch filterSearch) {
-        return null;
+        return mapTvModelsToDto(computerRepository.findTvModelsByTypeAndColorAndPriceRange(
+                filterSearch.getType(),
+                filterSearch.getModelName(),
+                filterSearch.getColor(),
+                filterSearch.getMinPrice(),
+                filterSearch.getMaxPrice()));
     }
 
     @Override
     public Iterable<ModelDto> findAllModels(FilterComputerModelSearch filterSearch) {
-        return null;
+        return mapTvModelsToDto(computerRepository.findAllModels(
+                filterSearch.getType(),
+                filterSearch.getModelName(),
+                filterSearch.getColor(),
+                filterSearch.getMinPrice(),
+                filterSearch.getMaxPrice(),
+                filterSearch.getCategory(),
+                filterSearch.getProcessorType()));
     }
 
     @Override
     public ModelDto getModelById(Long modelId) {
-        Optional<ComputerModelEntity> model = this.computerRepository.findById(modelId);
-        if (model.isPresent()) {
-            ProductMapper mapper = new ProductMapper();
-            return mapper.toModelDto(model.get());
-        } else {
-            throw new RuntimeException("Model not found");
-        }
+        ComputerModelEntity model = computerRepository.findById(modelId)
+                .orElseThrow(() -> new RuntimeException("Model not found"));
+        return productMapper.toModelDto(model);
     }
 
     @Override
     public ModelEntity createModel(Long productId, NewComputerPayload modelPayload) {
-        Optional<ProductEntity> product = this.productRepository.findById(productId);
-        if (product.isPresent()) {
-            ComputerModelEntity modelEntity = new ComputerModelEntity();
-            modelEntity.setName(modelPayload.getName());
-            modelEntity.setSerialNumber(modelPayload.getSerialNumber());
-            modelEntity.setColor(modelPayload.getColor());
-            modelEntity.setSize(modelPayload.getSize());
-            modelEntity.setAvailable(modelPayload.isAvailable());
-            modelEntity.setCategory(modelPayload.getCategory());
-            modelEntity.setProcessorType(modelPayload.getProcessorType());
-            modelEntity.setProduct(product.get());
-            product.get().getComputerModels().add(modelEntity);
-            return this.computerRepository.save(modelEntity);
-        } else {
-            throw new RuntimeException("Product Not Found");
-        }
+        ProductEntity product = productRepository.findById(productId)
+                .filter(p -> p.getType() == ProductType.TV)
+                .orElseThrow(() -> new RuntimeException("Product Not Found"));
 
+        ComputerModelEntity modelEntity = new ComputerModelEntity();
+        modelEntity.setName(modelPayload.getName());
+        modelEntity.setSerialNumber(modelPayload.getSerialNumber());
+        modelEntity.setColor(modelPayload.getColor());
+        modelEntity.setSize(modelPayload.getSize());
+        modelEntity.setAvailable(modelPayload.isAvailable());
+        modelEntity.setCategory(modelPayload.getCategory());
+        modelEntity.setProcessorType(modelPayload.getProcessorType());
+        modelEntity.setProduct(product);
+
+        product.getComputerModels().add(modelEntity);
+        return computerRepository.save(modelEntity);
     }
 
     @Override
@@ -72,6 +84,26 @@ public class ComputerServiceImpl implements ComputerService {
 
     @Override
     public Iterable<ModelDto> findAllSorted(String sortBy) {
-        return null;
+        Iterable<ComputerModelEntity> tvModels;
+        switch (sortBy) {
+            case "name":
+                tvModels = computerRepository.findAllByOrderByNameAsc();
+                break;
+            case "price":
+                tvModels = computerRepository.findAllByOrderByPriceAsc();
+                break;
+            case "name-price":
+                tvModels = computerRepository.findAllByOrderByNameAscPriceAsc();
+                break;
+            default:
+                tvModels = computerRepository.findAll();
+        }
+        return mapTvModelsToDto(tvModels);
+    }
+
+    private Iterable<ModelDto> mapTvModelsToDto(Iterable<ComputerModelEntity> tvModels) {
+        return StreamSupport.stream(tvModels.spliterator(), false)
+                .map(productMapper::toModelDto)
+                .collect(Collectors.toList());
     }
 }

@@ -39,8 +39,8 @@ public interface PhoneRepository extends CrudRepository<PhoneModelEntity, Long> 
             @Nullable @Param("color") String color,
             @Nullable @Param("minPrice") Double minPrice,
             @Nullable @Param("maxPrice") Double maxPrice,
-            @Nullable @Param("cameraCount") Double cameraCount,
-            @Nullable @Param("memory") Double memory
+            @Nullable @Param("cameraCount") int cameraCount,
+            @Nullable @Param("memory") int memory
     );
 
     Iterable<PhoneModelEntity> findAllByOrderByNameAsc();

@@ -40,7 +40,7 @@ public interface VacuumCleanerRepository extends CrudRepository<VacuumCleanerMod
             @Nullable @Param("minPrice") Double minPrice,
             @Nullable @Param("maxPrice") Double maxPrice,
             @Nullable @Param("dustBagCapacity") Double dustBagCapacity,
-            @Nullable @Param("modesCount") Double modesCount
+            @Nullable @Param("modesCount") int modesCount
     );
 
     Iterable<VacuumCleanerModelEntity> findAllByOrderByNameAsc();

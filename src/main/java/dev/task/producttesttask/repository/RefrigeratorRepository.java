@@ -39,8 +39,8 @@ public interface RefrigeratorRepository extends CrudRepository<RefrigeratorModel
             @Nullable @Param("color") String color,
             @Nullable @Param("minPrice") Double minPrice,
             @Nullable @Param("maxPrice") Double maxPrice,
-            @Nullable @Param("doorsCount") Double doorsCount,
-            @Nullable @Param("compressorType") Double compressorType
+            @Nullable @Param("doorsCount") int doorsCount,
+            @Nullable @Param("compressorType") String compressorType
     );
 
     Iterable<RefrigeratorModelEntity> findAllByOrderByNameAsc();
