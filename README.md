@@ -28,4 +28,6 @@ docker build  -t sandbox-spring:24.4.7 .
 docker run --name spring-app -p 8080:8080 --network=product-network sandbox-spring:24.4.7
 ```
 
+## SWAGGER
 
+http://localhost:8080/product/swagger-ui/index.html
