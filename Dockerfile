@@ -1,17 +1,18 @@
 FROM maven:3.9.4-eclipse-temurin-17 as build
 LABEL authors="Qatarbae"
-
+WORKDIR /build
 COPY src src
 COPY pom.xml pom.xml
 
-RUN mvn clean package
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 FROM bellsoft/liberica-openjdk-debian:17
+RUN addgroup spring-boot-group && adduser --ingroup spring-boot-group spring-boot
+USER spring-boot:spring-boot-group
 
-RUN adduser --system manager && addgroup --system manager && adduser manager manager
-USER manager
+VOLUME /tmp
+ARG JAR_FILE=ProductTestTask-0.0.1-SNAPSHOT.jar
+WORKDIR /application
 
-WORKDIR /app
+COPY --from=build /build/target/${JAR_FILE} application.jar
 
-COPY --from=build target/ProductTestTask-0.0.1-SNAPSHOT.jar ./application.jar
-
-ENTRYPOINT ["java", "-jar", "./application.jar"]
+ENTRYPOINT exec java ${JAVA_OPTS} -jar application.jar ${0} ${@}

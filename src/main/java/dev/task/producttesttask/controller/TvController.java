@@ -194,8 +194,18 @@ public class TvController {
 
     @GetMapping("/sorted")
     @Transactional
-    public ResponseEntity<Iterable<ModelDto>> findAllSorted(@RequestParam String sortBy) {
-        Iterable<ModelDto> sortedTvModels = tvModelService.findAllSorted(sortBy);
+    public ResponseEntity<Iterable<ModelDto>> findAllSorted(@RequestParam String name, @RequestParam String price) {
+        String sort;
+        if (name != null && !name.isEmpty() && price != null && !price.isEmpty()) {
+            sort = name + "-" + price;
+        } else if (name != null && !name.isEmpty()) {
+            sort = name;
+        } else if (price != null && !price.isEmpty()) {
+            sort = price;
+        } else {
+            sort = "none";
+        }
+        Iterable<ModelDto> sortedTvModels = tvModelService.findAllSorted(sort);
         return ResponseEntity.ok(sortedTvModels);
     }
 }
