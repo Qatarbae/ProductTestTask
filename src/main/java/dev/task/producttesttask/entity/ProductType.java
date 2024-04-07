@@ -5,5 +5,6 @@ public enum ProductType {
     VACUUM_CLEANER,
     REFRIGERATOR,
     PHONE,
-    COMPUTER
+    COMPUTER,
+    DEFAULT_VALUE
 }

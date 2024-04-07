@@ -30,12 +30,13 @@ public class TvModelServiceImpl implements TvModelService {
 
     @Override
     public Iterable<ModelDto> getAllModelsByTypeAndColorAndPriceRange(FilterTvModelSearch filterSearch) {
-        return mapTvModelsToDto(tvRepository.findTvModelsByTypeAndColorAndPriceRange(
+        Iterable<TvModelEntity> model = tvRepository.findTvModelsByTypeAndColorAndPriceRange(
                 filterSearch.getType(),
                 filterSearch.getModelName(),
                 filterSearch.getColor(),
                 filterSearch.getMinPrice(),
-                filterSearch.getMaxPrice()));
+                filterSearch.getMaxPrice());
+        return mapTvModelsToDto(model);
     }
 
     @Override
