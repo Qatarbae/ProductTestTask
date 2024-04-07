@@ -60,7 +60,7 @@ public class RefrigeratorServiceImpl implements RefrigeratorService {
     @Override
     public ModelEntity createModel(Long productId, NewRefrigeratorPayload modelPayload) {
         ProductEntity product = productRepository.findById(productId)
-                .filter(p -> p.getType() == ProductType.TV)
+                .filter(p -> p.getType() == ProductType.REFRIGERATOR)
                 .orElseThrow(() -> new RuntimeException("Product Not Found"));
 
         RefrigeratorModelEntity modelEntity = new RefrigeratorModelEntity();
@@ -72,7 +72,7 @@ public class RefrigeratorServiceImpl implements RefrigeratorService {
         modelEntity.setDoorsCount(modelPayload.getDoorsCount());
         modelEntity.setCompressorType(modelPayload.getCompressorType());
         modelEntity.setProduct(product);
-
+        modelEntity.setModelType(product.getType());
         product.getRefrigeratorModels().add(modelEntity);
         return refrigeratorRepository.save(modelEntity);
     }

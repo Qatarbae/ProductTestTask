@@ -59,7 +59,7 @@ public class PhoneServiceImpl implements PhoneService {
     @Override
     public ModelEntity createModel(Long productId, NewPhonePayload modelPayload) {
         ProductEntity product = productRepository.findById(productId)
-                .filter(p -> p.getType() == ProductType.TV)
+                .filter(p -> p.getType() == ProductType.PHONE)
                 .orElseThrow(() -> new RuntimeException("Product Not Found"));
 
         PhoneModelEntity modelEntity = new PhoneModelEntity();
@@ -71,7 +71,7 @@ public class PhoneServiceImpl implements PhoneService {
         modelEntity.setCameraCount(modelPayload.getMemory());
         modelEntity.setMemory(modelPayload.getMemory());
         modelEntity.setProduct(product);
-
+        modelEntity.setModelType(product.getType());
         product.getPhoneModels().add(modelEntity);
         return phoneRepository.save(modelEntity);
     }

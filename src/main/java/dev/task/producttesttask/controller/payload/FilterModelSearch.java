@@ -33,7 +33,7 @@ public class FilterModelSearch extends FilterProductSearch {
     @Schema(description = "Максимальная цена модели", example = "500", required = true)
     @Min(value = 0, message = "minimum maxPrice 0")
     @NotNull(message = "maxPrice cannot be null")
-    private Integer maxPrice = 0;
+    private Integer maxPrice = -1;
 
     @Schema(description = "Доступность модели", example = "true", required = true)
     private boolean available = false;

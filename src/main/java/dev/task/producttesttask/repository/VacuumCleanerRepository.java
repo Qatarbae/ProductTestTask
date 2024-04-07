@@ -31,8 +31,8 @@ public interface VacuumCleanerRepository extends CrudRepository<VacuumCleanerMod
             "AND (:color = '' OR LOWER(vc.color) LIKE LOWER(CONCAT('%', :color, '%'))) " +
             "AND (:minPrice = 0 OR vc.price >= :minPrice) " +
             "AND (:maxPrice = -1 OR vc.price <= :maxPrice) " +
-            "AND (:dustBagCapacity = -1 OR vc.dustBagCapacity = :dustBagCapacity) " +
-            "AND (:modesCount = -1 OR vc.modesCount = :modesCount)")
+            "AND (:dustBagCapacity = 0 OR vc.dustBagCapacity = :dustBagCapacity) " +
+            "AND (:modesCount = 0 OR vc.modesCount = :modesCount)")
     Iterable<VacuumCleanerModelEntity> findAllModels(
             @NonNull @Param("type") ProductType type,
             @NonNull @Param("modelName") String modelName,

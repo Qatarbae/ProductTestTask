@@ -14,8 +14,8 @@ public interface TvRepository extends CrudRepository<TvModelEntity, Long> {
             "ON (:type IS NULL OR p.type = :type) " +
             "WHERE (:modelName = '' OR tv.name LIKE CONCAT('%', :modelName, '%')) " +
             "AND (:color = '' OR tv.color LIKE CONCAT('%', :color, '%')) " +
-            "AND (:minPrice = -1 OR tv.price >= :minPrice) " +
-            "AND (:maxPrice =  0 OR tv.price <= :maxPrice)")
+            "AND (:minPrice = 0 OR tv.price >= :minPrice) " +
+            "AND (:maxPrice = -1 OR tv.price <= :maxPrice)")
     Iterable<TvModelEntity> findTvModelsByTypeAndColorAndPriceRange(
             @NonNull @Param("type") ProductType type,
             @NonNull @Param("modelName") String modelName,

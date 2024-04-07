@@ -60,7 +60,7 @@ public class ComputerServiceImpl implements ComputerService {
     @Override
     public ModelEntity createModel(Long productId, NewComputerPayload modelPayload) {
         ProductEntity product = productRepository.findById(productId)
-                .filter(p -> p.getType() == ProductType.TV)
+                .filter(p -> p.getType() == ProductType.COMPUTER)
                 .orElseThrow(() -> new RuntimeException("Product Not Found"));
 
         ComputerModelEntity modelEntity = new ComputerModelEntity();
@@ -72,7 +72,7 @@ public class ComputerServiceImpl implements ComputerService {
         modelEntity.setCategory(modelPayload.getCategory());
         modelEntity.setProcessorType(modelPayload.getProcessorType());
         modelEntity.setProduct(product);
-
+        modelEntity.setModelType(product.getType());
         product.getComputerModels().add(modelEntity);
         return computerRepository.save(modelEntity);
     }

@@ -60,7 +60,7 @@ public class VacuumCleanerServiceImpl implements VacuumCleanerService {
     @Override
     public ModelEntity createModel(Long productId, NewVacuumCleanerModelPayload modelPayload) {
         ProductEntity product = productRepository.findById(productId)
-                .filter(p -> p.getType() == ProductType.TV)
+                .filter(p -> p.getType() == ProductType.VACUUM_CLEANER)
                 .orElseThrow(() -> new RuntimeException("Product Not Found"));
 
         VacuumCleanerModelEntity modelEntity = new VacuumCleanerModelEntity();
@@ -72,7 +72,7 @@ public class VacuumCleanerServiceImpl implements VacuumCleanerService {
         modelEntity.setDustBagCapacity(modelPayload.getDustBagCapacity());
         modelEntity.setModesCount(modelPayload.getModesCount());
         modelEntity.setProduct(product);
-
+        modelEntity.setModelType(product.getType());
         product.getVacuumCleanerModels().add(modelEntity);
         return vacuumCleanerRepository.save(modelEntity);
     }

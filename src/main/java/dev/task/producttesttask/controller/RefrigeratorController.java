@@ -34,6 +34,60 @@ public class RefrigeratorController {
 
     @GetMapping("/search")
     @Transactional
+    @Operation(summary = "Фильтрация модели по виду, наименованию, цене, цвету",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(
+                                    type = "object",
+                                    implementation = FilterRefrigeratorSearch.class
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Успешный ответ",
+                            headers = @Header(name = "Content-type", description = "Тип данных"),
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            array = @ArraySchema(
+                                                    schema = @Schema(
+                                                            implementation = ModelDto.class
+                                                    )
+                                            )
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Product not found"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request"
+                    )
+            }
+    )
+    public ResponseEntity<Iterable<ModelDto>> getModelsByTypeAndColorAndPriceRange(
+            @Valid @RequestBody FilterRefrigeratorSearch filter,
+            BindingResult bindingResult
+    ) throws BindException {
+        if (bindingResult.hasErrors()) {
+            if (bindingResult instanceof BindException exception) {
+                throw exception;
+            } else {
+                throw new BindException(bindingResult);
+            }
+        } else {
+            Iterable<ModelDto> tvModelDto = refrigeratorService.getAllModelsByTypeAndColorAndPriceRange(filter);
+            return ResponseEntity.ok(tvModelDto);
+        }
+    }
+
+    @GetMapping("/full_search")
+    @Transactional
     @Operation(summary = "Фильтрация модели",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
@@ -63,10 +117,14 @@ public class RefrigeratorController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Product not found"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request"
                     )
             }
     )
-    public ResponseEntity<Iterable<ModelDto>> getModelsByTypeAndColorAndPriceRange(
+    public ResponseEntity<Iterable<ModelDto>> getAllModelsFilter(
             @Valid @RequestBody FilterRefrigeratorSearch filter,
             BindingResult bindingResult
     ) throws BindException {
@@ -77,7 +135,7 @@ public class RefrigeratorController {
                 throw new BindException(bindingResult);
             }
         } else {
-            Iterable<ModelDto> tvModelDto = refrigeratorService.getAllModelsByTypeAndColorAndPriceRange(filter);
+            Iterable<ModelDto> tvModelDto = refrigeratorService.findAllModels(filter);
             return ResponseEntity.ok(tvModelDto);
         }
     }
@@ -145,6 +203,10 @@ public class RefrigeratorController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Model has not been created"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request"
                     )
             })
     public ResponseEntity<ModelEntity> createTvModel(@RequestParam("productId") Long productId, @RequestBody NewRefrigeratorPayload tvModelPayload) {
@@ -175,8 +237,39 @@ public class RefrigeratorController {
     }
 
     @GetMapping("/sorted")
-    public ResponseEntity<Iterable<ModelDto>> findAllSorted(@RequestParam String sortBy) {
-        Iterable<ModelDto> sortedTvModels = refrigeratorService.findAllSorted(sortBy);
+    @Operation(summary = "Сортировка по названию и цене",
+            parameters = {
+                    @Parameter(name = "name", description = "название", required = true),
+                    @Parameter(name = "price", description = "цена", required = true)
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            headers = @Header(name = "Content-type", description = "Тип данных"),
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            array = @ArraySchema(
+                                                    schema = @Schema(
+                                                            implementation = ModelDto.class
+                                                    )
+                                            )
+                                    )
+                            }
+                    )
+            })
+    public ResponseEntity<Iterable<ModelDto>> findAllSorted(@RequestParam String name, @RequestParam String price) {
+        String sort;
+        if (name != null && !name.isEmpty() && price != null && !price.isEmpty()) {
+            sort = name + "-" + price;
+        } else if (name != null && !name.isEmpty()) {
+            sort = name;
+        } else if (price != null && !price.isEmpty()) {
+            sort = price;
+        } else {
+            sort = "none";
+        }
+        Iterable<ModelDto> sortedTvModels = refrigeratorService.findAllSorted(sort);
         return ResponseEntity.ok(sortedTvModels);
     }
 }

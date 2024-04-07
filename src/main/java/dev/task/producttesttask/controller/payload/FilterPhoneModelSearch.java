@@ -11,11 +11,11 @@ public class FilterPhoneModelSearch extends FilterModelSearch {
 
     @Schema(description = "Память", required = true)
     @NotNull(message = "Memory be null")
-    @Min(value = 2, message = "min 2")
-    private int memory = 2;
+    @Min(value = 2, message = "minimum memory 2")
+    private int memory;
 
     @Schema(description = "Количество камер", required = true)
     @NotNull(message = "Camera count cannot be null")
-    @Min(value = 0, message = "min 0")
-    private int cameraCount = 0;
+    @Min(value = 1, message = "minimum number camera 2")
+    private int cameraCount;
 }

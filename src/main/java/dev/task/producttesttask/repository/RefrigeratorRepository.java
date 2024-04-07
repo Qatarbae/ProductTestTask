@@ -29,9 +29,9 @@ public interface RefrigeratorRepository extends CrudRepository<RefrigeratorModel
             "ON (:type IS NULL OR p.type = :type) " +
             "WHERE (:modelName = '' OR LOWER(r.name) LIKE LOWER(CONCAT('%', :modelName, '%'))) " +
             "AND (:color = '' OR LOWER(r.color) LIKE LOWER(CONCAT('%', :color, '%'))) " +
-            "AND (:minPrice = -1 OR r.price >= :minPrice) " +
+            "AND (:minPrice = 0 OR r.price >= :minPrice) " +
             "AND (:maxPrice = -1 OR r.price <= :maxPrice) " +
-            "AND (:doorsCount = -1 OR r.doorsCount  = :doorsCount)" +
+            "AND (:doorsCount = 0 OR r.doorsCount  = :doorsCount)" +
             "AND (:compressorType = '' OR LOWER(r.compressorType) LIKE LOWER(CONCAT('%', :compressorType, '%')))")
     Iterable<RefrigeratorModelEntity> findAllModels(
             @NonNull @Param("type") ProductType type,

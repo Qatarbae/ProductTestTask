@@ -29,10 +29,10 @@ public interface PhoneRepository extends CrudRepository<PhoneModelEntity, Long> 
             "ON (:type IS NULL OR p.type = :type) " +
             "WHERE (:modelName = '' OR LOWER(ph.name) LIKE LOWER(CONCAT('%', :modelName, '%'))) " +
             "AND (:color = '' OR LOWER(ph.color) LIKE LOWER(CONCAT('%', :color, '%'))) " +
-            "AND (:minPrice = -1 OR ph.price >= :minPrice) " +
+            "AND (:minPrice = 0 OR ph.price >= :minPrice) " +
             "AND (:maxPrice = -1 OR ph.price <= :maxPrice) " +
-            "AND (:cameraCount = -1 OR ph.cameraCount = :cameraCount) " +
-            "AND (:memory = -1 OR ph.memory = :memory )")
+            "AND (:cameraCount = 0 OR ph.cameraCount = :cameraCount) " +
+            "AND (:memory = 0 OR ph.memory = :memory )")
     Iterable<PhoneModelEntity> findAllModels(
             @NonNull @Param("type") ProductType type,
             @NonNull @Param("modelName") String modelName,

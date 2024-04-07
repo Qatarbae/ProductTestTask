@@ -34,7 +34,7 @@ public class VacuumCleanerController {
 
     @GetMapping("/search")
     @Transactional
-    @Operation(summary = "Фильтрация модели",
+    @Operation(summary = "Фильтрация модели по виду, наименованию, цене, цвету",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -78,6 +78,56 @@ public class VacuumCleanerController {
             }
         } else {
             Iterable<ModelDto> tvModelDto = vacuumCleanerService.getAllModelsByTypeAndColorAndPriceRange(filter);
+            return ResponseEntity.ok(tvModelDto);
+        }
+    }
+
+    @GetMapping("/full_search")
+    @Transactional
+    @Operation(summary = "Фильтрация модели по виду, наименованию, цене, цвету",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(
+                                    type = "object",
+                                    implementation = FilterVacuumCleanerModelSearch.class
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Успешный ответ",
+                            headers = @Header(name = "Content-type", description = "Тип данных"),
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            array = @ArraySchema(
+                                                    schema = @Schema(
+                                                            implementation = ModelDto.class
+                                                    )
+                                            )
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Product not found"
+                    )
+            }
+    )
+    public ResponseEntity<Iterable<ModelDto>> getAllModelsFilter(
+            @Valid @RequestBody FilterVacuumCleanerModelSearch filter,
+            BindingResult bindingResult
+    ) throws BindException {
+        if (bindingResult.hasErrors()) {
+            if (bindingResult instanceof BindException exception) {
+                throw exception;
+            } else {
+                throw new BindException(bindingResult);
+            }
+        } else {
+            Iterable<ModelDto> tvModelDto = vacuumCleanerService.findAllModels(filter);
             return ResponseEntity.ok(tvModelDto);
         }
     }
@@ -175,8 +225,39 @@ public class VacuumCleanerController {
     }
 
     @GetMapping("/sorted")
-    public ResponseEntity<Iterable<ModelDto>> findAllSorted(@RequestParam String sortBy) {
-        Iterable<ModelDto> sortedTvModels = vacuumCleanerService.findAllSorted(sortBy);
+    @Operation(summary = "Сортировка по названию и цене",
+            parameters = {
+                    @Parameter(name = "name", description = "название", required = true),
+                    @Parameter(name = "price", description = "цена", required = true)
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            headers = @Header(name = "Content-type", description = "Тип данных"),
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            array = @ArraySchema(
+                                                    schema = @Schema(
+                                                            implementation = ModelDto.class
+                                                    )
+                                            )
+                                    )
+                            }
+                    )
+            })
+    public ResponseEntity<Iterable<ModelDto>> findAllSorted(@RequestParam String name, @RequestParam String price) {
+        String sort;
+        if (name != null && !name.isEmpty() && price != null && !price.isEmpty()) {
+            sort = name + "-" + price;
+        } else if (name != null && !name.isEmpty()) {
+            sort = name;
+        } else if (price != null && !price.isEmpty()) {
+            sort = price;
+        } else {
+            sort = "none";
+        }
+        Iterable<ModelDto> sortedTvModels = vacuumCleanerService.findAllSorted(sort);
         return ResponseEntity.ok(sortedTvModels);
     }
 }

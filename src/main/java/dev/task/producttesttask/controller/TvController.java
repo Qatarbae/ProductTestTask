@@ -34,7 +34,7 @@ public class TvController {
 
     @GetMapping("/search")
     @Transactional
-    @Operation(summary = "Фильтрация модели",
+    @Operation(summary = "Фильтрация модели по виду, наименованию, цене, цвету",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -82,6 +82,60 @@ public class TvController {
         }
     }
 
+    @GetMapping("/full_search")
+    @Transactional
+    @Operation(summary = "Фильтрация модели",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(
+                                    type = "object",
+                                    implementation = FilterTvModelSearch.class
+                            )
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Успешный ответ",
+                            headers = @Header(name = "Content-type", description = "Тип данных"),
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            array = @ArraySchema(
+                                                    schema = @Schema(
+                                                            implementation = ModelDto.class
+                                                    )
+                                            )
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Model not found"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request"
+                    )
+            }
+    )
+    public ResponseEntity<Iterable<ModelDto>> getAllModelsFilter(
+            @Valid @RequestBody FilterTvModelSearch filter,
+            BindingResult bindingResult
+    ) throws BindException {
+        if (bindingResult.hasErrors()) {
+            if (bindingResult instanceof BindException exception) {
+                throw exception;
+            } else {
+                throw new BindException(bindingResult);
+            }
+        } else {
+            Iterable<ModelDto> tvModelDto = tvModelService.findAllModels(filter);
+            return ResponseEntity.ok(tvModelDto);
+        }
+    }
+
     @GetMapping("/{modelId}")
     @Transactional
     @Operation(summary = "Получение информации о модели по ID",
@@ -114,6 +168,10 @@ public class TvController {
                                             )
                                     )
                             }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request"
                     )
             }
     )
@@ -163,6 +221,10 @@ public class TvController {
                                             )
                                     )
                             }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad request"
                     )
             })
     public ResponseEntity<ModelEntity> createTvModel(@RequestParam("productId") Long productId, @RequestBody NewTvModelPayload tvModelPayload) {
@@ -194,6 +256,27 @@ public class TvController {
 
     @GetMapping("/sorted")
     @Transactional
+    @Operation(summary = "Сортировка по названию и цене",
+            parameters = {
+                    @Parameter(name = "name", description = "название", required = true),
+                    @Parameter(name = "price", description = "цена", required = true)
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            headers = @Header(name = "Content-type", description = "Тип данных"),
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            array = @ArraySchema(
+                                                    schema = @Schema(
+                                                            implementation = ModelDto.class
+                                                    )
+                                            )
+                                    )
+                            }
+                    )
+            })
     public ResponseEntity<Iterable<ModelDto>> findAllSorted(@RequestParam String name, @RequestParam String price) {
         String sort;
         if (name != null && !name.isEmpty() && price != null && !price.isEmpty()) {

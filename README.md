@@ -11,8 +11,7 @@ docker network create product-network
 Запуск в Docker:
 
 ```shell
-docker run --name product-db -p 5432:5432 -e POSTGRES_USER=spring -e POSTGRES_PASSWORD=password -e POSTGRES_DB=product --network=product-network po
-stgres:15
+docker run --name product-db -p 5432:5432 -e POSTGRES_USER=spring -e POSTGRES_PASSWORD=password -e POSTGRES_DB=product --network=product-network postgres:15
 ```
 
 ## Spring

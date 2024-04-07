@@ -73,7 +73,7 @@ public class TvModelServiceImpl implements TvModelService {
         modelEntity.setCategory(modelPayload.getCategory());
         modelEntity.setTechnology(modelPayload.getTechnology());
         modelEntity.setProduct(product);
-
+        modelEntity.setModelType(product.getType());
         product.getTvModels().add(modelEntity);
         return tvRepository.save(modelEntity);
     }
