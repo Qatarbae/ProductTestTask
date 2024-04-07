@@ -82,12 +82,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductEntity createProduct(NewProductPayload payload) {
         return this.productRepository.save(new ProductEntity(
-                payload.type(),
-                payload.name(),
-                payload.manufacturerCountry(),
-                payload.manufacturer(),
-                payload.installmentAvailable(),
-                payload.onlineOrderAvailable()
+                payload.getType(),
+                payload.getName(),
+                payload.getManufacturerCountry(),
+                payload.getManufacturer(),
+                payload.isInstallmentAvailable(),
+                payload.isOnlineOrderAvailable()
         ));
     }
 
